@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
-book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley 
-Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
+book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley
+Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -23,7 +23,7 @@ implied warranty.
 using namespace ::std;
 
 // p. 74 {{{
-template <class Stream>
+template <typename Stream>
 void streamcpy(Stream& dest, const Stream& src)
 {
     // clear exception mask
@@ -31,8 +31,8 @@ void streamcpy(Stream& dest, const Stream& src)
 
     dest.clear(src.rdstate() );
 
-    typedef basic_ios<  Stream::char_type
-                      , Stream::traits_type> StreamBase;
+    typedef basic_ios< typename Stream::char_type
+                      , typename Stream::traits_type> StreamBase;
     (static_cast<StreamBase&>(dest) )
         .rdbuf( (static_cast<const StreamBase&>(src) ).rdbuf() );
     // call copyfmt after all other actions because it copies

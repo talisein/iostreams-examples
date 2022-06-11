@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -34,10 +34,10 @@ public:
         time(&ltime); // get system time
         tm_ptr= localtime(&ltime); // convert to tm struct
         if ( tm_ptr != NULL )
-        {        
+        {
             tm_date = *tm_ptr;
             ok = true;
-        }        
+        }
         else // is date before 1-1-1970
             ok = false;
     }
@@ -51,7 +51,7 @@ public:
     template <class charT, class Traits>
         ios_base::iostate get_from(basic_istream<charT, Traits>& is)
     {
-        ios_base::iostate err = 0;
+        ios_base::iostate err{};
         use_facet<time_get<charT, istreambuf_iterator<charT, Traits> > > (is.getloc()).get_date
             (is, istreambuf_iterator<char, char_traits<char> > (), is, err, &tm_date);
         if (!(*this) || err)
@@ -66,7 +66,7 @@ public:
         const char * const patt = "%x";
         char fmt[3];
         basic_stringbuf<charT, Traits> sb;
-        ios_base::iostate err = 0;
+        ios_base::iostate err{};
 
         use_facet<ctype<charT> > (os.getloc()).widen(patt, patt+2, fmt);
         if (     use_facet<time_put<charT, ostreambuf_iterator<charT, Traits> > >
@@ -74,7 +74,7 @@ public:
            )
            err = ios_base::failbit;
         if ( err == ios_base::goodbit )
-        {        
+        {
             basic_string<charT, Traits> s = sb.str();
             streamsize charToPad = static_cast<streamsize> (os.width() - s.length());
             ostreambuf_iterator<charT, Traits> sink(os);
@@ -82,7 +82,7 @@ public:
                 sink = copy(s.begin(), s.end(), sink);
 // }}}
 // p. 174 {{{
-            else 
+            else
             {
                 if ( os.flags() & ios_base::left )
                 {
@@ -105,15 +105,15 @@ private:
     bool ok;
 // p. 162
     bool valid()  // check for sensible date; rejects nonsense like 32.12.1999
-                  // The leap - year rule has been simplifies. For example, 1900 wasn't 
+                  // The leap - year rule has been simplifies. For example, 1900 wasn't
                   // a leap year and 2100 won't be.
     {
-        if (tm_date.tm_mon < 0 || tm_date.tm_mon > 11) 
+        if (tm_date.tm_mon < 0 || tm_date.tm_mon > 11)
             return false;
         if (tm_date.tm_mday < 1)
             switch ( tm_date.tm_mon )
-            { 
-                case 0 : 
+            {
+                case 0 :
                 case 2 :
                 case 4 :
                 case 6 :
@@ -129,10 +129,10 @@ private:
                     if (tm_date.tm_mday > 28 && tm_date.tm_year % 4)
                         return false;
                     break;
-              default:  
+              default:
                   if (tm_date.tm_mday > 30)
                       return false;
-            }  
+            }
         return true;
     }
 // }}}
@@ -164,11 +164,11 @@ basic_istream<charT, Traits>& g_extractor
             is.setstate(err);
         }
         else if ( exception_mask & ios_base::badbit )
-        {        
+        {
             try { is.setstate(err); }
             catch (ios_base::failure& ) {}
             throw;
-        }        
+        }
     }
     catch(...)
         {
@@ -180,11 +180,11 @@ basic_istream<charT, Traits>& g_extractor
             is.setstate(err);
         }
         else if ( exception_mask & ios_base::failbit )
-        {        
+        {
             try { is.setstate(err); }
             catch( ios_base::failure& ) { }
             throw;
-        }        
+        }
     }
 
     if ( err ) is.setstate( err );
@@ -192,19 +192,19 @@ basic_istream<charT, Traits>& g_extractor
 }
 
 // The inserter:
-template <class charT, class Traits, class Argument> 
-basic_ostream<charT, Traits>& g_inserter  
-  (basic_ostream<charT, Traits>& os, const Argument& arg) 
+template <class charT, class Traits, class Argument>
+basic_ostream<charT, Traits>& g_inserter
+  (basic_ostream<charT, Traits>& os, const Argument& arg)
 {
-    ios_base::iostate err = 0;
+    ios_base::iostate err{};
     try
     {
         typename basic_ostream<charT, Traits>::sentry opfx(os);
         if ( opfx )
-        {        
+        {
             err = arg.print_on(os);
             os.width(0);
-        }        
+        }
     }
 // }}}
 // p. 172 {{{
@@ -214,9 +214,9 @@ basic_ostream<charT, Traits>& g_inserter
         ios_base::iostate exception_mask = os.exceptions();
         if (    (exception_mask & ios_base::failbit)
             &&! (exception_mask & ios_base::badbit) )
-        {        
+        {
             os.setstate (err);
-        }        
+        }
         else if (exception_mask & ios_base::badbit)
         {
             try { os.setstate( err ); }
@@ -230,15 +230,15 @@ basic_ostream<charT, Traits>& g_inserter
         ios_base::iostate exception_mask = os.exceptions();
         if (    (exception_mask & ios_base::badbit )
             &&  (err & ios_base::badbit))
-        {        
+        {
             os.setstate( err );
-        }        
+        }
         else if ( exception_mask & ios_base::failbit )
-        {        
+        {
             try { os.setstate( err ); }
             catch( ios_base::failure& ) { }
             throw;
-        }        
+        }
     }
     if (err )
         os.setstate( err );

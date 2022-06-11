@@ -1,35 +1,36 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
-book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley 
-Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
+book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley
+Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
 #include <fstream>
 #include <string>
 #include <cassert>
+#include <cstring>
 
 using namespace ::std;
 
 int main()
 {
     {
-       // The statement 
+       // The statement
        // fstream fstr("filnam.txt", ios_base::in | ios_base::out );
        // does not enforce the existence of a file
        // Therefore the existence of an empty file is enforced by this block.
        fstream fstr("filnam.txt", ios_base::out );
     }
-	
+
 	// p. 53 {{{
     fstream fstr("filnam.txt", ios_base::in | ios_base::out);
 
@@ -47,7 +48,7 @@ int main()
 	// p. 53 {{{
     fstr.read(buffer, 5);
 	// }}}
-    assert(0 == strncmp(buffer, "01234", 5) ); 
+    assert(0 == strncmp(buffer, "01234", 5) );
 
     // move the joint streamposition 3 positions back
     fstr.seekp(-3, ios_base::cur);

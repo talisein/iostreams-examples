@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
-book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley 
-Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
+book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley
+Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -35,7 +35,7 @@ public iterator<output_iterator_tag, void, void, void, void>
 
 
         ostreambuf_iterator(ostream_type& s) throw()
-            : sbuf(s.rdbuf() ), failedFlag(false) {}
+            : failedFlag(false), sbuf(s.rdbuf() ) {}
 
         ostreambuf_iterator(streambuf_type* sb) throw()
             : sbuf(sb), failedFlag(false) {}
@@ -43,8 +43,8 @@ public iterator<output_iterator_tag, void, void, void, void>
         ostreambuf_iterator& operator= (const charT& t)
         {
             if ( failed() == false && sbuf != 0 )
-            {        
-                traits_type::int_type result;
+            {
+                typename traits_type::int_type result;
 
                 try
                 {
@@ -59,12 +59,12 @@ public iterator<output_iterator_tag, void, void, void, void>
 
                 if (traits_type::eq_int_type(result, traits_type::eof() ) )
                     failedFlag = true;
-            } 
-         
+            }
+
 			// {{{
             // sbuf might be 0. In this case failedFlag should be set.
             failedFlag |= (sbuf == 0);
-			// }}}                
+			// }}}
 
             return *this;
         }

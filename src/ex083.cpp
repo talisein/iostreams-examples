@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
-book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley 
-Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
+book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley
+Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -29,7 +29,7 @@ struct basic_istream : public std::basic_istream<charT, traits>
 	basic_istream<charT, traits>&
 	operator >>(int& n)
 	{
-		ios_base::iostate err = 0;
+		ios_base::iostate err{};
 
 		long l; // !!! Helper, for get(....) does not compile with int parameter.
 		use_facet<num_get<charT, istreambuf_iterator<charT, traits> > >(this->getloc())
@@ -38,8 +38,8 @@ struct basic_istream : public std::basic_istream<charT, traits>
 			*this,
 			err,                    //provide an iostate object to the facet
 			l); // !!! l used instead of n
-		n = l; // !!! 
-		if (err) 
+		n = l; // !!!
+		if (err)
 			this->setstate(err); // set the streams state accordingly
 		return *this;
 	}
@@ -52,7 +52,7 @@ struct basic_istream : public std::basic_istream<charT, traits>
 int main()
 {
 	book::basic_istream<char>& b_istr = static_cast<book::basic_istream<char>&> ( cin  );
-	
+
 	int i1, i2;
 	b_istr >> i1;
 	cerr << "error state (1): " << b_istr.rdstate() << endl;

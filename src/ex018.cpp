@@ -24,7 +24,7 @@ int main()
 {
 	// p. 18 {{{
     cout.setf(ios_base::boolalpha);
-    bool boolalpha_set = cout.flags() & ios_base::boolalpha;
+    bool boolalpha_set [[maybe_unused]] = cout.flags() & ios_base::boolalpha;
     cout.unsetf(ios_base::boolalpha);
     cout.setf(ios_base::right, ios_base::adjustfield);
 	// }}}

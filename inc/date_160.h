@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -45,7 +45,7 @@ private:
     tm tm_date;
 
     template<class charT, class Traits>
-    friend basic_istream<charT, Traits>& 
+    friend basic_istream<charT, Traits>&
     operator >>(basic_istream<charT, Traits>& is, date& dat);
 
     template<class charT, class Traits>
@@ -56,7 +56,7 @@ private:
 
 // p. 159 {{{
 template<class charT, class Traits>
-basic_istream<charT, Traits>& 
+basic_istream<charT, Traits>&
 operator >>(basic_istream<charT, Traits>& is, date& dat)
 {
 	if (!is.good() )
@@ -65,10 +65,10 @@ operator >>(basic_istream<charT, Traits>& is, date& dat)
 	ios_base::iostate err = ios_base::goodbit;
 	typename basic_istream<charT, Traits>::sentry ipfx(is);
 	if ( ipfx )
-	{        
+	{
 		use_facet<time_get<charT, istreambuf_iterator<charT, Traits> > >(is.getloc() )
 			.get_date(is, istreambuf_iterator<charT, Traits>(), is, err, &dat.tm_date);
-	}        
+	}
 
 	return is;
 }
@@ -79,8 +79,9 @@ template<class charT, class Traits>
 basic_ostream<charT, Traits>&
 operator <<(basic_ostream<charT, Traits>& os, const date& dat)
 {
-    if (!os.good() )
+    if (!os.good() ) {
         return os;
+    }
 
 	typename basic_ostream<charT, Traits>::sentry opfx(os);
 	if (opfx)
@@ -93,23 +94,23 @@ operator <<(basic_ostream<charT, Traits>& os, const date& dat)
 		basic_string<charT, Traits> s = sb.str();
 		streamsize charToPad = static_cast<streamsize>(os.width() - s.length());
 		ostreambuf_iterator<charT, Traits> sink(os);
-		if (charToPad <= 0) 
-		{ 
-			sink = copy(s.begin(), s.end(), sink); 
-		} 
-		else 
-		{ 
-			if (os.flags() & ios_base::left) 
-			{ 
-				sink = copy(s.begin(), s.end(), sink); 
-				fill_n(sink,charToPad,os.fill()); 
-			} 
-			else 
-			{ 
-				fill_n(sink,charToPad,os.fill()); 
-				sink = copy(s.begin(), s.end(), sink); 
-			} 
-		} 
+		if (charToPad <= 0)
+		{
+			sink = copy(s.begin(), s.end(), sink);
+		}
+		else
+		{
+			if (os.flags() & ios_base::left)
+			{
+				sink = copy(s.begin(), s.end(), sink);
+				fill_n(sink,charToPad,os.fill());
+			}
+			else
+			{
+				fill_n(sink,charToPad,os.fill());
+				sink = copy(s.begin(), s.end(), sink);
+			}
+		}
 	}
 	os.width(0);
 	return os;

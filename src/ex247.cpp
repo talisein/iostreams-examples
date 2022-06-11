@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -26,18 +26,24 @@ template <class charT,
           class my_stringbuf : public basic_stringbuf<charT, Traits, Allocator>
 {
     public:
+    using char_type = charT;
+    using traits_type = Traits;
+    using int_type = typename Traits::int_type;
+    using pos_type = typename Traits::pos_type;
+    using off_type = typename Traits::off_type;
+
         int_type scontainc (char_type c)
         {
             int_type cnt = 0;
 
-            if (gptr() == egptr() )
-                underflow();
+            if (this->gptr() == this->egptr() )
+                this->underflow();
 
-            for ( int_type i = 0; gptr() != 0 && gptr()+i != egptr(); ++i )
-            {     
-                if (*(gptr()+i) == c)
+            for ( int_type i = 0; this->gptr() != 0 && this->gptr()+i != this->egptr(); ++i )
+            {
+                if (*(this->gptr()+i) == c)
                     ++cnt;
-            }     
+            }
             return cnt;
         }
 
@@ -46,7 +52,7 @@ template <class charT,
 		explicit my_stringbuf(const basic_string<charT, Traits, Allocator>& str,
 			ios_base::openmode which = ios_base::in | ios_base::out)
 			: basic_stringbuf<charT, Traits, Allocator>(str, which) {}
-		// }}} 
+		// }}}
     private:
         // prohibit copying and assignment
         my_stringbuf(const my_stringbuf&);

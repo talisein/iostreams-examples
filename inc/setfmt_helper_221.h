@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -23,7 +23,6 @@ implied warranty.
 
 #include "one_arg_manip_weh_187.h"
 #include "getidx_195.h"
-
 
 
 // p. 203 {{{
@@ -42,12 +41,12 @@ class setfmt_helper : public one_arg_manip_weh<const charT*>
 			p->fmt(f);
 	}
 // }}}
-// p. 205 {{{ 
-// Implementation from p. 205 
+// p. 205 {{{
+// Implementation from p. 205
 	static void callback(ios_base::event ev, ios_base& str, int i)
     {
         if ( ev == ios_base::erase_event )
-        {        
+        {
             try {delete static_cast<basic_string<charT>*> (str.pword(i)); }
             catch (...) {}
         }
@@ -58,15 +57,15 @@ class setfmt_helper : public one_arg_manip_weh<const charT*>
             void *& formatStringPtr = str.pword(i);
             basic_string<charT> * old;
             if ( (old = static_cast<basic_string<charT>*> (formatStringPtr)) != 0 )
-            {        
+            {
                 try { formatStringPtr = new basic_string<charT>(*old); }
-                catch (bad_alloc&) 
-				{ 
+                catch (bad_alloc&)
+				{
 					ios_base::iostate err = ios_base::badbit;
 					str.iword(i) = err | static_cast<ios_base::iostate> (str.iword(i));
 				}
-            }        
-        }        
+            }
+        }
     }
 // }}}
 // p. 204 {{{

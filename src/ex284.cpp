@@ -1,26 +1,25 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
 #include <locale>
-#include <io.h>
 #include <cassert>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <iostream>
-
+#include <unistd.h>
 
 using namespace ::std;
 
@@ -28,16 +27,16 @@ using namespace ::std;
 void CreateDataFile()
 {
 	char text[] = "abcdefghij";
-	int fd = _open("ex284.dat", _O_WRONLY | _O_CREAT, _S_IWRITE );
+	int fd = open("ex284.dat", O_WRONLY | O_CREAT, S_IWRITE );
 	assert(fd >= 0);
-	_write(fd,text,sizeof(text));
-	_close(fd);
+	write(fd,text,sizeof(text));
+	close(fd);
 }
 
 typedef mbstate_t ConversionState; // We use the default type
 
 enum {
-	NoError, 
+	NoError,
 	NoMoreInput,
 	ReadError,
 	ResultBufferFull,
@@ -49,19 +48,19 @@ int main()
 {
 	CreateDataFile();
 
-	const int fd = _open("ex284.dat", _O_RDONLY);
+	const int fd = open("ex284.dat", O_RDONLY);
 	assert(fd >= 0);
 
 	// Ensure file will be closed later when exiting
 	struct CloseFd {
 		CloseFd(const int& fd) : mfd(fd) {};
 		~CloseFd() {
-			_close(mfd);
+			close(mfd);
 		}
 		const int& mfd;
 	} CloseFd(fd);
 
-	locale loc("C"); 
+	locale loc("C");
 
 	// p. 284 {{{
 	ConversionState cs;
@@ -79,22 +78,22 @@ int main()
 	int err = 0;
 
 	while ( !err )
-	{ 
-		char * fromNext;
+	{
+		const char * fromNext;
 		wchar_t *toNext;
 		int readResult;
 		codecvt_base::result convResult;
 
-		if ((readResult = _read (fd, readStart, readSize)) <= 0) // !!! _read used instead read
-		{ 
-			if (readResult == 0) 
-				err = NoMoreInput; 
-			else 
-				err = ReadError; 
-			break; 
-		} 
+		if ((readResult = read (fd, readStart, readSize)) <= 0)
+		{
+			if (readResult == 0)
+				err = NoMoreInput;
+			else
+				err = ReadError;
+			break;
+		}
 
-		convResult = use_facet< codecvt<wchar_t, char, ConversionState> >(loc).in 
+		convResult = use_facet< codecvt<wchar_t, char, ConversionState> >(loc).in
 			(cs, transBuf, transBuf + transBufSize, fromNext, to, toLimit, toNext);
 // }}}
 // p. 285 {{{
@@ -110,13 +109,14 @@ int main()
 			readStart = transBuf;
 		}
 		else if ( convResult == codecvt_base::partial )
-		{        
+		{
 			int num = transBuf + transBufSize - fromNext;
-			copy(fromNext, transBuf + transBufSize, transBuf);
+            char * untransFrom = transBuf + (fromNext - transBuf);
+			copy(untransFrom, transBuf + transBufSize, transBuf);
 			readSize = transBufSize - num;
 			readStart = transBuf + num;
-		}        
-	} 
+		}
+	}
 // }}}
 
 	wcout << L"The converted file is:" << endl << resultBuf << endl;

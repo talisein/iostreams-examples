@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -31,13 +31,12 @@ const Facet& use_facet(const locale& loc)
 	const Facet *pd;
 
 	// use the Facet identification
-	if ((pb = loc._Getfacet(Facet::id)) == 0) // !!! _Getfacet insted get_facet, the shipped
-											  // version has no get_facet
-		throw (bad_cast("missing locale facet"));
+	if ((pb = &std::use_facet<Facet>(loc))) // !!! use_facet insted get_facet TODO: there's no get_facet. It seems implementing use_facet is a secret in gcc
+		throw (bad_cast()); // TODO: Can't define what
 
 	// use the facet type
 	if ((pd = dynamic_cast<const Facet*>(pb)) == 0)
-		throw(bad_cast("missing locale facet"));
+		throw(bad_cast());// TODO: Can't define what
 
 	return (*pd);
 }
