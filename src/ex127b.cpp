@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
-book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley 
-Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
+book, Angelika Langer and Klaus Kreft, nor the publisher, Addison Wesley
+Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -25,7 +25,7 @@ namespace book {
 
 // p. 127 {{{
 template<class T, class charT = char, class traits = char_traits<charT> >
-class ostream_iterator : 
+class ostream_iterator :
     public iterator<output_iterator_tag, void, void, void, void>
 {
 public:
@@ -34,7 +34,7 @@ public:
     typedef basic_ostream<charT, traits> ostream_type;
 
     ostream_iterator(ostream_type&s, const charT* d = 0)
-        : ost(&s), delim(d) {}
+        : delim(d), ost(&s) {}
 
     ostream_iterator& operator= (const T& t)
     {
@@ -82,4 +82,3 @@ int main()
 0/1/2/3/4/5/6/7/8/9/
 2 * 3 * 5 * 7 * 11 * 13 * 17 * 19 * 23 * 29 *
 */
-

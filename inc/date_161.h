@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -30,7 +30,7 @@ public:
         tm_date.tm_sec = tm_date.tm_min = tm_date.tm_hour = 0;
         tm_date.tm_wday = tm_date.tm_yday = 0;
         tm_date.tm_isdst = 0;
-        ok = (valid() & (mktime(&tm_date) != time_t(-1) ) ) ? true : false;
+        ok = (valid() && (mktime(&tm_date) != time_t(-1) ) ) ? true : false;
     }
     date(const tm& t) : tm_date(t)
     {
@@ -45,10 +45,10 @@ public:
         time(&ltime); // get system time
         tm_ptr= localtime(&ltime); // convert to tm struct
         if ( tm_ptr != NULL )
-        {        
+        {
             tm_date = *tm_ptr;
             ok = true;
-        }        
+        }
         else // is date before 1-1-1970
             ok = false;
     }
@@ -64,14 +64,14 @@ private:
     bool ok;
 
     bool valid()  // check for sensible date; rejects nonsense like 32.12.1999
-                  // The leap - year rule has been simplifies. For example, 1900 wasn't 
+                  // The leap - year rule has been simplifies. For example, 1900 wasn't
                   // a leap year and 2100 won't be.
     {
-        if (tm_date.tm_mon < 0 || tm_date.tm_mon > 11) 
+        if (tm_date.tm_mon < 0 || tm_date.tm_mon > 11)
             return false;
         if (tm_date.tm_mday < 1)
             switch ( tm_date.tm_mon )
-            { 
+            {
                 case 0 : // !!! sequence was sorted in example
                 case 2 :
                 case 4 :
@@ -88,10 +88,10 @@ private:
                     if (tm_date.tm_mday > 28 && tm_date.tm_year % 4)
                         return false;
                     break;
-              default:  
+              default:
                   if (tm_date.tm_mday > 30)
                       return false;
-            }  
+            }
         return true;
     }
 
@@ -115,18 +115,18 @@ operator >>(basic_istream<charT, Traits>& is, date& dat)
         return is;
 
     ios_base::iostate err = ios_base::goodbit;
-    try 
+    try
     {
         typename basic_istream<charT, Traits>::sentry ipfx(is);
         if ( ipfx )
-        {        
+        {
             use_facet<time_get<charT, istreambuf_iterator<charT, Traits> > >
 				(is.getloc()).get_date
 					(is, istreambuf_iterator<charT, Traits>(), is, err, &dat.tm_date);
             // check for the date's validity
             if (!dat)
                 err |= ios_base::failbit;
-        }        
+        }
     }
     catch(bad_alloc&)
     {
@@ -138,12 +138,12 @@ operator >>(basic_istream<charT, Traits>& is, date& dat)
         {
             is.setstate(err);
         }
-        else if ( exception_mask& ios_base::badbit) 
-        {        
+        else if ( exception_mask& ios_base::badbit)
+        {
             try {is.setstate(err); }
             catch (ios_base::failure& ) { }
             throw;
-        }        
+        }
     }
     catch(...)
     {
@@ -193,16 +193,16 @@ operator<< (basic_ostream<charT, Traits>& os, const date& dat)
 
             // field width adjustment
             if ( err == ios_base::goodbit )
-            {        
+            {
                 basic_string<charT, Traits> s = sb.str();
                 streamsize charToPad = static_cast<streamsize>(os.width() - s.length());
                 ostreambuf_iterator<charT, Traits> sink(os);
 // }}}
 // p. 165 {{{
                 if ( charToPad <= 0 )
-                {        
+                {
                     sink = copy(s.begin(), s.end(), sink);
-                }        
+                }
                 else
                 {
                     if (os.flags() & ios_base::left)
@@ -214,13 +214,13 @@ operator<< (basic_ostream<charT, Traits>& os, const date& dat)
                     {
                         fill_n(sink, charToPad, os.fill() );
                         sink = copy(s.begin(), s.end(), sink);
-                        
-                    }        
+
+                    }
                 }
-                
+
                 if (sink.failed() )
                     err = ios_base::failbit;
-            }        
+            }
             os.width(0);
         }
     }
@@ -233,15 +233,15 @@ operator<< (basic_ostream<charT, Traits>& os, const date& dat)
 
         if (    ( exception_mask & ios_base::failbit)
             && !( exception_mask & ios_base::badbit ) )
-        {        
+        {
             os.setstate(err);
-        }        
+        }
         else if (exception_mask & ios_base::badbit)
         {
             try { os.setstate(err); }
             catch( ios_base::failure& ) { }
             throw;
-        }        
+        }
     }
 
     catch(...)
@@ -256,14 +256,14 @@ operator<< (basic_ostream<charT, Traits>& os, const date& dat)
             os.setstate(err);
         }
         else if ( exception_mask & ios_base::failbit )
-        {        
+        {
             try { os.setstate (err ); }
             catch( ios_base::failure& ) { }
             throw;
-        }        
+        }
     }
 
-    if (err) 
+    if (err)
         os.setstate( err );
     return os;
 }

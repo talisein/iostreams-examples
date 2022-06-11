@@ -33,12 +33,12 @@ class German_address_put : public address_put<charT, OutIter>
     protected:
 		typedef basic_string<charT> String;
         void do_put(OutIter oi,
-            const String& firstname, const String& secname,
+            const String& firstname, const String& secname [[maybe_unused]],
             const String& lastname,
             const String& address1,  const String& address2,
             const String& town,      const String& zipcode,
-            const String& state,
-            const String& country,   const String& cntrycode) const
+            const String& state [[maybe_unused]],
+            const String& country [[maybe_unused]],   const String& cntrycode) const
         {
             String s(firstname);
             s.append(" ").append(lastname).append("\n");

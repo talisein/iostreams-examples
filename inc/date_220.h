@@ -30,7 +30,7 @@ public:
         tm_date.tm_sec = tm_date.tm_min = tm_date.tm_hour = 0;
         tm_date.tm_wday = tm_date.tm_yday = 0;
         tm_date.tm_isdst = 0;
-        ok = (valid() & (mktime(&tm_date) != time_t(-1) ) ) ? true : false;
+        ok = (valid() && (mktime(&tm_date) != time_t(-1) ) ) ? true : false;
     }
     date(const tm& t) : tm_date(t)
     {

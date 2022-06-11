@@ -41,7 +41,7 @@ class odatestream
 		try
 			: OStream(s, mode), datefmt<char_type>(fmt? fmt : dafaultPatt(*this)) { }
 		catch (...)
-			{ setbad(); }
+        { setbad(); } // TODO: clang warning. The base constructor failed, we should just throw...
 		// }}}
 
 		// !!! ctor implemented inline for the compiler does not accept the try statement otherwise
@@ -54,7 +54,7 @@ class odatestream
             this->clear(toBeAdapted.rdstate());
 			this->copyfmt(toBeAdapted);
 		}
-		catch(...) {setbad(); }
+		catch(...) {setbad(); } // TODO: clang warning. The base constructor failed, we should just throw...
 		// }}}
 
 		// ...

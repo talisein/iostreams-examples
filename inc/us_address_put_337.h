@@ -37,7 +37,7 @@ class US_address_put : public address_put<charT, OutIter>
             const String& address1,  const String& address2,
             const String& town,      const String& zipcode,
             const String& state,
-            const String& country,   const String& cntrycode) const
+            const String& country,   const String& cntrycode [[maybe_unused]]) const
         {
             String s(firstname);
             s.append(" ").append(secname).append(" ").append(lastname)

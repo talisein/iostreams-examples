@@ -1,16 +1,16 @@
 /*
-author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de> 
+author:  "Klaus Wittlich" <Klaus_Wittlich@sae.de>
 
-Based on source code published in the book "Standard C++ IOStreams 
-and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by 
+Based on source code published in the book "Standard C++ IOStreams
+and Locales" by Angelika Langer & Klaus Kreft, Copyright (c) 2000 by
 Addison Wesley Longman, Inc.
 
 Permission to use, copy, and modify this software for any non-profit
-purpose is hereby granted without fee.  Neither the author of this 
-source code, Klaus Wittlich, nor the authors of the above mentioned 
+purpose is hereby granted without fee.  Neither the author of this
+source code, Klaus Wittlich, nor the authors of the above mentioned
 book, Angelika Langer and Klaus Kreft, nor the publisher, Addison
-Wesley Longman, Inc., make any representations about the suitability of this 
-software for any purpose.  It is provided "as is" without express or 
+Wesley Longman, Inc., make any representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
 implied warranty.
 */
 
@@ -24,16 +24,21 @@ using namespace ::std;
 int main()
 {
 	// p. 296 {{{
-	ostringstream oss; 
-	locale loc("American_USA.1252"); 
-	oss.imbue(loc); 
-	const time_put<char>& tfac = use_facet<time_put<char> >(loc); 
-	struct tm xmas = { 0, 0, 12, 25, 11, 93 }; 
-	string fmt("This is %A, day %d of month %B in the year %Y.\n"); 
-	time_put<char>::iter_type ret  
-	= tfac.put(oss,oss,' ',&xmas, 
-			fmt.c_str(),fmt.c_str()+fmt.length()); 
-	cout << oss.str() << endl; 
+	ostringstream oss;
+//	locale loc("American_USA.1252");
+    locale loc("en_US.utf-8");
+	oss.imbue(loc);
+	const time_put<char>& tfac = use_facet<time_put<char> >(loc);
+	struct tm xmas{};
+    xmas.tm_hour = 12;
+    xmas.tm_mday = 25;
+    xmas.tm_mon = 11;
+    xmas.tm_year = 93;
+    string fmt("This is %A, day %d of month %B in the year %Y.\n");
+	time_put<char>::iter_type ret [[maybe_unused]]
+	= tfac.put(oss,oss,' ',&xmas,
+			fmt.c_str(),fmt.c_str()+fmt.length());
+	cout << oss.str() << endl;
 	// }}}
 
     return 0;
