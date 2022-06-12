@@ -10,3 +10,5 @@ project('iostreams-examples', 'cpp',
 inc = include_directories('inc')
 
 subdir('src')
+subdir('testdata')
+subdir('tests')
